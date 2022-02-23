@@ -5,4 +5,7 @@ contextBridge.exposeInMainWorld('myAPI', {
     myPing() {
       ipcRenderer.send('ipc-example', 'ping');
     },
+    openDir(msg) {
+      ipcRenderer.sendSync(IPCKeys.OPEN_DIR,msg)
+    }
 });

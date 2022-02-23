@@ -9,11 +9,13 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+
+const  { IPCKeys } = require("./constants");
 
 export default class AppUpdater {
   constructor() {
@@ -133,3 +135,13 @@ app
     });
   })
   .catch(console.log);
+
+
+ipcMain.on(IPCKeys.OPEN_DIR,(e,arg)=>{
+  OpenDir();
+  e.returnValue = true;
+})
+
+const OpenDir = () =>{
+  let ret = dialog.showOpenDialogSync({properties:['openDirectory']});
+}

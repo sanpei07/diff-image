@@ -9,6 +9,7 @@ const Home:React.FC = () => {
   return (
     <div>
       <h1>Diff image</h1>
+      <div><button onClick={()=>myAPI.openDir("msg")}>OPEN_DIR</button></div>
     </div>
   );
 };

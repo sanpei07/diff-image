@@ -5,4 +5,5 @@ declare global {
 }
 export interface IMyAPI {
     myPing:() => void;  
+    openDir:(msg:string) => void;
 }
