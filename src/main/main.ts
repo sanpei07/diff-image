@@ -14,6 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import fs from 'fs';
+import mime from 'mime-types';
 
 const  { IPCKeys } = require("./constants");
 
@@ -77,6 +79,9 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
@@ -138,10 +143,31 @@ app
 
 
 ipcMain.on(IPCKeys.OPEN_DIR,(e,arg)=>{
-  OpenDir();
-  e.returnValue = true;
+  var ret = OpenDir(arg);
+  e.returnValue = ret;
 })
 
-const OpenDir = () =>{
+const OpenDir = (msg:string):any =>{
   let ret = dialog.showOpenDialogSync({properties:['openDirectory']});
+  if(ret){
+    ReadImageData(ret[0],msg);
+  }
+  return ret;
+}
+
+const ReadImageData = (readPath:string,msg:string)=>{
+  var openDir = readPath;
+  var imgs:string[] = [];
+  fs.readdir(openDir,(err,dir)=>{
+    for(let file of dir){
+      var ext = path.extname(file); //ファイルの拡張子を取得
+      var filePath = path.resolve(path.join(openDir,file)); //ファイルのフルパスを取得
+      var type = mime.lookup(ext);
+      if (type && /^image\//.test(type)) {
+        imgs.push(filePath.toString());
+      }
+    }
+    console.log(imgs);
+    mainWindow?.webContents.send(IPCKeys.RECEIVE_IMAGES,imgs,msg)
+  })
 }
