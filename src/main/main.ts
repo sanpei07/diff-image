@@ -17,6 +17,7 @@ import { resolveHtmlPath } from './util';
 import fs from 'fs';
 import mime from 'mime-types';
 
+
 const  { IPCKeys } = require("./constants");
 
 export default class AppUpdater {

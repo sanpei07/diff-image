@@ -1,5 +1,8 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState  } from 'react';
+import { Button, Card} from 'semantic-ui-react';
+
+
 const { myAPI } = window;
 
 const Home:React.FC = () => {
@@ -20,13 +23,18 @@ const Home:React.FC = () => {
   return (
     <div>
       <h1>Diff image</h1>
-      <div><button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</button></div>
+      <div><Button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</Button></div>
+      <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
+      <div style={{"width":200}}>
+      <Card.Group itemsPerRow={2}>
       {images1.map((image,index) => (
-      <div style={{textAlign:'center',background:'#000',width:'200px'}}>
-        <img src={image} height={200} style={{objectFit:"contain",}} onClick={()=>{}}></img>
-        <img src={image} height={200} style={{objectFit:"contain",}} onClick={()=>{}}></img>
-      </div>
+        <>
+        <Card raised image={image} />
+        <Card raised image={images2[index]} />
+        </>
       ))}
+      </Card.Group>
+      </div>
     </div>
   );
 };
