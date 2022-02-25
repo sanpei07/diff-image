@@ -24,6 +24,7 @@ const styles : {[key: string]:React.CSSProperties} = {
 const Home:React.FC = () => {
   const [images1, setImages1] = useState([""]);
   const [images2, setImages2] = useState([""]);
+  const [imgNum,setImgNum] = useState(0);
 
   useEffect(()=>{
     myAPI.myPing();
@@ -42,16 +43,20 @@ const Home:React.FC = () => {
       <Card.Group itemsPerRow={2}>
       {images1.map((image,index) => (
         <>
-        <Card raised image={image} />
-        <Card raised image={images2[index]} />
+        <Card raised image={image} onClick={()=>{setImgNum(index)}} />
+        <Card raised image={images2[index] } onClick={()=>{setImgNum(index)}} />
         </>
       ))}
       </Card.Group>
       </div>
       <div style={styles.body}>
-      <h1>Diff image</h1>
-      <div><Button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</Button></div>
-      <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
+        <div><Button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</Button></div>
+        <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
+        <button onClick={()=>{setImgNum(imgNum-1)}}>previous</button>
+        <button onClick={()=>{setImgNum(imgNum+1)}}>next</button>
+        <button onClick={()=>{}}>delete</button>
+        <img src={images1[imgNum]}></img>
+        <img src={images2[imgNum]}></img>
       </div>
     </div>
   );
