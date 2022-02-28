@@ -54,7 +54,7 @@ const Home:React.FC = () => {
         <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
         <button onClick={()=>{setImgNum(imgNum-1)}}>previous</button>
         <button onClick={()=>{setImgNum(imgNum+1)}}>next</button>
-        <button onClick={()=>{}}>delete</button>
+        <button onClick={()=>{myAPI.deleteImage(images1[imgNum],images2[imgNum])}}>delete</button>
         <img src={images1[imgNum]}></img>
         <img src={images2[imgNum]}></img>
       </div>

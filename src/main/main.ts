@@ -182,6 +182,7 @@ const DeleteImage = (path1:string,path2:string) => {
   try{
     fs.unlinkSync(path1);
     fs.unlinkSync(path2);
+    console.log("delete")
   }catch (error){
     throw error;
   }
