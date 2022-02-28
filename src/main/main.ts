@@ -148,6 +148,11 @@ ipcMain.on(IPCKeys.OPEN_DIR,(e,arg)=>{
   e.returnValue = ret;
 })
 
+ipcMain.on(IPCKeys.DELETE_IMAGE,(e,path1,path2)=>{
+  DeleteImage(path1,path2);
+  e.returnValue = true;
+})
+
 const OpenDir = (msg:string):any =>{
   let ret = dialog.showOpenDialogSync({properties:['openDirectory']});
   if(ret){
@@ -171,4 +176,13 @@ const ReadImageData = (readPath:string,msg:string)=>{
     console.log(imgs);
     mainWindow?.webContents.send(IPCKeys.RECEIVE_IMAGES,imgs,msg)
   })
+}
+
+const DeleteImage = (path1:string,path2:string) => {
+  try{
+    fs.unlinkSync(path1);
+    fs.unlinkSync(path2);
+  }catch (error){
+    throw error;
+  }
 }

@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld('myAPI', {
     openDir(msg) {
       ipcRenderer.sendSync(IPCKeys.OPEN_DIR,msg)
     },
+    deleteImage(path1,path2){
+      ipcRenderer.sendSync(IPCKeys.DELETE_IMAGE,path1,path2);
+    }
     onReceiveImages(listener){
       ipcRenderer.on(IPCKeys.RECEIVE_IMAGES,(event,...args) => listener(...args))
       return () => {
