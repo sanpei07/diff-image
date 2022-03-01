@@ -2,7 +2,6 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState  } from 'react';
 import { Button, Card ,Segment} from 'semantic-ui-react';
 import './App.css';
-import { autoUpdater } from 'electron';
 const { myAPI } = window;
 
 const styles : {[key: string]:React.CSSProperties} = {
@@ -44,6 +43,8 @@ const Home:React.FC = () => {
     <div style={styles.container}>
       <div style={styles.sidebar}>
       <Card.Group itemsPerRow={2}>
+        <Card><Button icon="folder open outline" onClick={()=>myAPI.openDir("images1")}/></Card>
+        <Card><Button icon="folder open outline" onClick={()=>myAPI.openDir("images2")}></Button></Card>
       {images1.map((image,index) => (
         <>
         <Card raised image={image} onClick={()=>{setImgNum(index)}} />
@@ -53,9 +54,6 @@ const Home:React.FC = () => {
       </Card.Group>
       </div>
       <div style={styles.body}>
-        <div><Button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</Button></div>
-        <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
-        
         <img src={images1[imgNum]} style={{width:'50%'}} ></img>
         <img src={images2[imgNum] } style={{width:'50%'}}></img>
         <Segment inverted style={{position:'fixed',bottom:"10%",left:"50%",transform:'translateX(-50%)',}}>
