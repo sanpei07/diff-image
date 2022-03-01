@@ -1,6 +1,6 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState  } from 'react';
-import { Button, Card} from 'semantic-ui-react';
+import { Button, Card ,Segment} from 'semantic-ui-react';
 import './App.css';
 const { myAPI } = window;
 
@@ -10,7 +10,7 @@ const styles : {[key: string]:React.CSSProperties} = {
       height: '100vh',
   },
   sidebar:{
-      width: '210px',
+      width: '220px',
       background: '#f9c',
       overflowY: 'auto',
   },
@@ -52,11 +52,20 @@ const Home:React.FC = () => {
       <div style={styles.body}>
         <div><Button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</Button></div>
         <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
-        <button onClick={()=>{setImgNum(imgNum-1)}}>previous</button>
-        <button onClick={()=>{setImgNum(imgNum+1)}}>next</button>
-        <button onClick={()=>{myAPI.deleteImage(images1[imgNum],images2[imgNum])}}>delete</button>
+        
         <img src={images1[imgNum]}></img>
         <img src={images2[imgNum]}></img>
+        <Segment inverted>
+        <Button icon="arrow alternate circle left outline" onClick={()=>{setImgNum(imgNum-1)}}></Button>
+        <Button icon="arrow alternate circle right outline" onClick={()=>{setImgNum(imgNum+1)}}></Button>
+        <Button icon="trash alternate outline" onClick={()=>{
+          myAPI.deleteImage(images1[imgNum],images2[imgNum]);
+          images1.splice(imgNum,1);
+          images2.splice(imgNum,1);
+          setImages1([...images1]);
+          setImages2([...images2]);
+          }}></Button>
+          </Segment>
       </div>
     </div>
   );
