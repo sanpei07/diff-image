@@ -2,6 +2,7 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState  } from 'react';
 import { Button, Card ,Segment} from 'semantic-ui-react';
 import './App.css';
+import { autoUpdater } from 'electron';
 const { myAPI } = window;
 
 const styles : {[key: string]:React.CSSProperties} = {
@@ -18,6 +19,8 @@ const styles : {[key: string]:React.CSSProperties} = {
       flex: 1,
       background: '#9cf',
       overflowY: 'auto',
+      margin:'0 auto',
+      
   }
 }
 
@@ -53,9 +56,9 @@ const Home:React.FC = () => {
         <div><Button onClick={()=>myAPI.openDir("images1")}>OPEN_DIR</Button></div>
         <div><Button onClick={()=>myAPI.openDir("images2")}>OPEN_DIR</Button></div>
         
-        <img src={images1[imgNum]}></img>
-        <img src={images2[imgNum]}></img>
-        <Segment inverted>
+        <img src={images1[imgNum]} style={{width:'50%'}} ></img>
+        <img src={images2[imgNum] } style={{width:'50%'}}></img>
+        <Segment inverted style={{position:'fixed',bottom:"10%",left:"50%",transform:'translateX(-50%)',}}>
         <Button icon="arrow alternate circle left outline" onClick={()=>{setImgNum(imgNum-1)}}></Button>
         <Button icon="arrow alternate circle right outline" onClick={()=>{setImgNum(imgNum+1)}}></Button>
         <Button icon="trash alternate outline" onClick={()=>{
