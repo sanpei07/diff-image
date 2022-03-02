@@ -88,9 +88,8 @@ const Home:React.FC = () => {
         <img src={images2[imgNum] } style={styles.bodyImage}></img>
         <div style={styles.fixedwrap}><div style={styles.editbar}>
         <Segment>
-        <Button icon="arrow alternate circle left outline" style={styles.editbutton} onClick={()=>{setImgNum(imgNum-1)}}></Button>
-        <Button icon="arrow alternate circle left outline" style={styles.editbutton} onClick={()=>{setImgNum(imgNum-1)}}></Button>
-        <Button icon="arrow alternate circle right outline" style={styles.editbutton} onClick={()=>{setImgNum(imgNum+1)}}></Button>
+        <Button icon="arrow alternate circle left outline" style={styles.editbutton} onClick={()=>{(imgNum>0)?setImgNum(imgNum-1):setImgNum(images1.length-1)}}></Button>
+        <Button icon="arrow alternate circle right outline" style={styles.editbutton} onClick={()=>{(imgNum<images1.length-1)?setImgNum(imgNum+1):setImgNum(0)}}></Button>
         <Button icon="trash alternate outline" style={styles.editbutton} onClick={()=>{
           myAPI.deleteImage(images1[imgNum],images2[imgNum]);
           images1.splice(imgNum,1);
