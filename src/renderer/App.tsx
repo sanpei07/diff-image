@@ -87,6 +87,14 @@ const Home:React.FC = () => {
     (imgNum<images1.length-1)?setImgNum(imgNum+1):setImgNum(0);
   }
 
+  const imageDelete =()=>{
+    myAPI.deleteImage(images1[imgNum],images2[imgNum]);
+    images1.splice(imgNum,1);
+    images2.splice(imgNum,1);
+    setImages1([...images1]);
+    setImages2([...images2]);
+  }
+
   useEffect(()=>{
     myAPI.myPing();
     ///images1.pop();
@@ -113,7 +121,7 @@ const Home:React.FC = () => {
             (<div style={styles.dropArea} onClick={()=>{openImage1Dir()}}>FOLDER1</div>)}
         </div>
         <div style={styles.bodyImageWrap}>
-          {(images2.length > 0)? 
+          {(images2.length > 0)? 　
             (<img src={images2[imgNum]} style={styles.bodyImage} ></img>):
             (<div style={styles.dropArea} onClick={()=>{openImage2Dir()}}>FOLDER2</div>)}
         </div>
@@ -121,14 +129,13 @@ const Home:React.FC = () => {
         <div style={styles.fixedwrap}><div style={styles.editbar}>
           <Segment>
             <Button icon="arrow alternate circle left outline" style={styles.editbutton} onClick={()=>{imageNext()}}></Button>
-            <Button icon="arrow alternate circle right outline" style={styles.editbutton} onClick={()=>{imagePrevious()}}></Button>
+            <Button icon="folder open outline" onClick={()=>{openImage1Dir()}}/>
             <Button icon="trash alternate outline" style={styles.editbutton} onClick={()=>{
-              myAPI.deleteImage(images1[imgNum],images2[imgNum]);
-              images1.splice(imgNum,1);
-              images2.splice(imgNum,1);
-              setImages1([...images1]);
-              setImages2([...images2]);
-              }}></Button>
+              var result = window.confirm('ボタンをクリックしてください');
+              }}>  
+            </Button>
+            <Button icon="folder open outline" onClick={()=>{openImage2Dir()}}/>
+            <Button icon="arrow alternate circle right outline" style={styles.editbutton} onClick={()=>{imagePrevious()}}></Button>
           </Segment>
         </div>
       </div>
@@ -136,8 +143,6 @@ const Home:React.FC = () => {
 
       <div style={styles.sidebar}>
         <Card.Group itemsPerRow={2}>
-          {/*<Card><Button icon="folder open outline" onClick={()=>myAPI.openDir("images1")}/></Card>
-          <Card><Button icon="folder open outline" onClick={()=>myAPI.openDir("images2")}/></Card>*/}
           {(images1.length>images2.length)?(images1.map((image,index) => (
           <>
           <Card raised image={image} onClick={()=>{setImgNum(index)}} />
