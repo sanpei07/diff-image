@@ -2,3 +2,63 @@ body {
   margin: 0;
   height: 100vh;
 }
+#container{
+  display: flex;
+  height: 100vh;
+}
+#sidebar{
+  width: 220px;
+  background: #666;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px
+}
+#body{
+  flex: 1;
+  background: #333;
+  overflow-y: auto;
+}
+.bodyImageWrap{
+  width:50%;
+  height:100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content:center;
+  vertical-align:middle;
+}
+.bodyImage{
+  width:100%;
+}
+.dropArea{
+  width:70%;
+  height:70%;
+  border:1rem dashed #aaa;
+  border-radius:1rem;
+  font-size:3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content:center;
+  vertical-align:middle;
+  cursor: pointer;
+}
+.fixedwrap{
+  /*position:fixed*/
+  width:'100%';
+  /*height: 100%;
+  textAlign:center;*/
+  margin:'0 auto',
+}
+#editbar{
+  position:fixed;
+  bottom:10%;
+  /*left: 50%; //leftを使用すると親できなくなるので使用しない:*/
+  transform:translateX(-50%);
+  /*margin:auto;
+  inset: 0;
+  display:inline-block;*/
+  margin-left:calc(50% - 110px);
+}
+.editbutton{
+  width:75px;
+  height:75px;
+}

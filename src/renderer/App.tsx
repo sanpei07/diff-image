@@ -1,70 +1,23 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useEffect, useState  } from 'react';
+import React, { useEffect, useState, useCallback  } from 'react';
+import { useKey } from "rooks";
 import { Button, Card ,Segment} from 'semantic-ui-react';
 import './App.css';
 const { myAPI } = window;
 
-const styles : {[key: string]:React.CSSProperties} = {
-  container:{
-      display: 'flex',
-      height: '100vh',
-  },
-  sidebar:{
-      width: '220px',
-      background: '#f9c',
-      overflowY: 'auto',
-      overflowX: 'hidden',
-      padding:'10px'
-  },
-  body:{
-      flex: 1,
-      background: '#9cf',
-      overflowY: 'auto',
-  },
-  bodyImageWrap:{
-    width:'50%',
-    height:'100%',
-    display: 'inline-flex',
-    alignItems: "center",
-    justifyContent:"center",
-    verticalAlign:"middle",
-  },
-  bodyImage:{
-    width:'100%',
-  },
-  dropArea:{
-    width:'70%',
-    height:'70%',
-    border:"1rem solid #aaa",
-    borderRadius:'1rem',
-    fontSize:"3rem",
-    display: 'inline-flex',
-    alignItems: "center",
-    justifyContent:"center",
-    verticalAlign:"middle",
-    cursor: "pointer",
-  },
+const APIMsg = {
+  IMAGES1:"iamges1",
+  IMAGES2:"iamges2",
+}
 
-  fixedwrap:{
-    //position:'fixed',
-    width:'100%',
-    //height: '100%',
-    //textAlign:'center',
-    margin:'0 auto',
+const styles : {[key: string]:React.CSSProperties} = {
+  dropAreaNormal:{
+    //background:"#000"
   },
-  editbar:{
-    position:'fixed',
-    bottom:"10%",
-    //left: '50%', //leftを使用すると親できなくなるので使用しない
-    transform:'translateX(-50%)',
-    //margin:'auto',
-    //inset: 0,
-    //display:'inline-block',
-    marginLeft:'calc(50% - 110px)',
-  },
-  editbutton:{
-    width:'75px',
-    height:'75px'
+  dropAreaOver:{
+    //background:"#f00",
+    //width:"80%",
+    transform:"scale(1.1,1.1)"
   }
 }
 
@@ -72,12 +25,17 @@ const Home:React.FC = () => {
   const [images1, setImages1] = useState<string[]>([]);
   const [images2, setImages2] = useState<string[]>([]);
   const [imgNum,setImgNum] = useState(0);
+  const [isOver1, setIsOver1] = useState(false);
+  const [isOver2, setIsOver2] = useState(false);
+
+  useKey(['ArrowLeft'],()=>{imagePrevious()});
+  useKey(['ArrowRight'],()=>{imageNext()});
 
   const openImage1Dir = () =>{
-    myAPI.openDir("images1");
+    myAPI.openDir(APIMsg.IMAGES1);
   }
   const openImage2Dir = () =>{
-    myAPI.openDir("images2");
+    myAPI.openDir(APIMsg.IMAGES2);
   }
 
   const imageNext = () =>{
@@ -95,14 +53,64 @@ const Home:React.FC = () => {
     setImages2([...images2]);
   }
 
+  const dropFolder1 = (e:React.DragEvent) =>{
+    setIsOver1(false);
+    if(e.type == 'drop'){
+      const fileList = e.dataTransfer.files;
+      const path = fileList.item(0)?.path;
+      if(path){
+        myAPI.dropFolder(path,APIMsg.IMAGES1);
+      }
+    }
+    if(e.type == "dragover"){
+      setIsOver1(true);
+    }
+    e.preventDefault();
+  }
+
+  const dropFolder2 = (e:React.DragEvent) =>{
+    setIsOver2(false);
+    if(e.type == 'drop'){
+      const fileList = e.dataTransfer.files
+      const path = fileList.item(0)?.path;
+      if(path){
+        myAPI.dropFolder(path,APIMsg.IMAGES2);
+      }
+    }
+    if(e.type == "dragover"){
+      setIsOver2(true);
+    }
+    e.preventDefault();
+  }
+
+  const editbar = () =>{
+    if(images1.length > 0 || images2.length > 0){
+      return(
+      <div className='flexdwrap'>
+        <div id='editbar'>
+        <Segment>
+            <Button className='editbutton' icon="arrow alternate circle left outline" onClick={()=>{imageNext()}}></Button>
+            <Button className='editbutton' icon="folder open outline" onClick={()=>{openImage1Dir()}}/>
+            <Button className='editbutton' icon="trash alternate outline" onClick={()=>{
+              var result = window.confirm('削除してもよろしいでしょうか?');
+              if(result)imageDelete();
+              }}>  
+            </Button>
+            <Button className='editbutton' icon="folder open outline" onClick={()=>{openImage2Dir()}}/>
+            <Button className='editbutton' icon="arrow alternate circle right outline" onClick={()=>{imagePrevious()}}></Button>
+          </Segment>
+        </div>
+      </div>);
+    }else{
+      return(<></>);
+    }
+  }
+
   useEffect(()=>{
     myAPI.myPing();
-    ///images1.pop();
-    //setImages1([...images1]);
-    console.log(images1.length);
     const removeListener = myAPI.onReceiveImages((files: string[],msg:string) => {
-      if(msg == "images1") setImages1(files);
-      if(msg == "images2") setImages2(files);
+      if(msg == APIMsg.IMAGES1) setImages1(files);
+      if(msg == APIMsg.IMAGES2) setImages2(files);
       console.log(msg);
     });
     return ()=>{
@@ -111,37 +119,54 @@ const Home:React.FC = () => {
   },[])
 
   return (
-    <div style={styles.container}>
+
+    <div id='container'>
       
-      <div style={styles.body}>
-
-        <div style={styles.bodyImageWrap}>
+      <div id='body'>
+        <div className='bodyImageWrap'>
           {(images1.length > 0)? 
-            (<img src={images1[imgNum]} style={styles.bodyImage} ></img>):
-            (<div style={styles.dropArea} onClick={()=>{openImage1Dir()}}>FOLDER1</div>)}
+            (<img src={images1[imgNum]}
+              style={(isOver1)?styles.dropAreaOver:styles.dropAreaNormal} 
+              className='bodyImage'
+              onDragOver={(e)=>{dropFolder1(e)}}
+                onDragEnter={(e)=>{dropFolder1(e)}}
+                onDrop={(e)=>{dropFolder1(e)}}
+                onDragLeave={(e)=>{dropFolder1(e)}}/>):
+            (<div
+                style={(isOver1)?styles.dropAreaOver:styles.dropAreaNormal}
+                className='dropArea' 
+                onDragOver={(e)=>{dropFolder1(e)}}
+                onDragEnter={(e)=>{dropFolder1(e)}}
+                onDrop={(e)=>{dropFolder1(e)}}
+                onDragLeave={(e)=>{dropFolder1(e)}}
+                onClick={()=>{openImage1Dir()}}>
+                FOLDER1
+              </div>)}
         </div>
-        <div style={styles.bodyImageWrap}>
-          {(images2.length > 0)? 　
-            (<img src={images2[imgNum]} style={styles.bodyImage} ></img>):
-            (<div style={styles.dropArea} onClick={()=>{openImage2Dir()}}>FOLDER2</div>)}
+        <div className='bodyImageWrap'>
+          {(images2.length > 0)? 
+            (<img src={images2[imgNum]}
+              style={(isOver2)?styles.dropAreaOver:styles.dropAreaNormal}
+              onDragOver={(e)=>{dropFolder2(e)}}
+              onDragEnter={(e)=>{dropFolder2(e)}}
+              onDrop={(e)=>{dropFolder2(e)}}
+              onDragLeave={(e)=>{dropFolder2(e)}}
+              className='bodyImage' />):
+            (<div
+                style={(isOver2)?styles.dropAreaOver:styles.dropAreaNormal}
+                className='dropArea'
+                onDragOver={(e)=>{dropFolder2(e)}}
+                onDragEnter={(e)=>{dropFolder2(e)}}
+                onDrop={(e)=>{dropFolder2(e)}}
+                onDragLeave={(e)=>{dropFolder2(e)}}
+              onClick={()=>{openImage2Dir()}}>
+              FOLDER2
+            </div>)}
         </div>
-
-        <div style={styles.fixedwrap}><div style={styles.editbar}>
-          <Segment>
-            <Button icon="arrow alternate circle left outline" style={styles.editbutton} onClick={()=>{imageNext()}}></Button>
-            <Button icon="folder open outline" onClick={()=>{openImage1Dir()}}/>
-            <Button icon="trash alternate outline" style={styles.editbutton} onClick={()=>{
-              var result = window.confirm('ボタンをクリックしてください');
-              }}>  
-            </Button>
-            <Button icon="folder open outline" onClick={()=>{openImage2Dir()}}/>
-            <Button icon="arrow alternate circle right outline" style={styles.editbutton} onClick={()=>{imagePrevious()}}></Button>
-          </Segment>
-        </div>
+        {editbar()}
       </div>
-      </div>
 
-      <div style={styles.sidebar}>
+      <div id='sidebar'>
         <Card.Group itemsPerRow={2}>
           {(images1.length>images2.length)?(images1.map((image,index) => (
           <>

@@ -6,7 +6,10 @@ contextBridge.exposeInMainWorld('myAPI', {
       ipcRenderer.send('ipc-example', 'ping');
     },
     openDir(msg) {
-      ipcRenderer.sendSync(IPCKeys.OPEN_DIR,msg)
+      ipcRenderer.sendSync(IPCKeys.OPEN_DIR,msg);
+    },
+    dropFolder(path,msg){
+      ipcRenderer.sendSync(IPCKeys.DROP_FOLDER,path,msg);
     },
     deleteImage(path1,path2){
       ipcRenderer.sendSync(IPCKeys.DELETE_IMAGE,path1,path2);

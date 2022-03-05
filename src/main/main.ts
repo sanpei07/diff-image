@@ -148,10 +148,17 @@ ipcMain.on(IPCKeys.OPEN_DIR,(e,arg)=>{
   e.returnValue = ret;
 })
 
+ipcMain.on(IPCKeys.DROP_FOLDER,(e,path,msg) =>{
+  ReadImageData(path,msg);
+  e.returnValue = true;
+})
+
 ipcMain.on(IPCKeys.DELETE_IMAGE,(e,path1,path2)=>{
   DeleteImage(path1,path2);
   e.returnValue = true;
 })
+
+
 
 const OpenDir = (msg:string):any =>{
   let ret = dialog.showOpenDialogSync({properties:['openDirectory']});
