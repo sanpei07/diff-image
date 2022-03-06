@@ -8,14 +8,14 @@ body {
 }
 #sidebar{
   width: 220px;
-  background: #666;
+  background: #333;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px
 }
 #body{
   flex: 1;
-  background: #333;
+  background-color: #1a212a;
   overflow-y: auto;
 }
 .bodyImageWrap{
@@ -32,7 +32,7 @@ body {
 .dropArea{
   width:30vw;
   height:30vw;
-  border:1rem dashed #aaa;
+  border:0.5rem dashed #ccc;
   border-radius:1rem;
   font-size:3rem;
   display: inline-flex;
@@ -40,6 +40,10 @@ body {
   justify-content:center;
   vertical-align:middle;
   cursor: pointer;
+}
+.dropArea:hover{
+  transition: 0.3s;
+  transform:scale(1.1,1.1);
 }
 .fixedwrap{
   /*position:fixed*/
@@ -50,9 +54,13 @@ body {
 }
 #editbar{
   position:fixed;
-  bottom:10%;
+  bottom:2.5%;
   /*left: 50%; //leftを使用すると親できなくなるので使用しない:*/
   transform:translateX(-50%);
+  background-color: #333333f1;
+  border-radius:1rem;
+  box-shadow: 0 0 8px;
+  padding: 1rem;
   /*margin:auto;
   inset: 0;
   display:inline-block;*/
@@ -61,4 +69,69 @@ body {
 .editbutton{
   width:75px;
   height:75px;
+  background-color: #33333300;
+  border: 0;
+  border-radius:1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.editbutton:hover{
+  transition: 0.3s;
+  background-color: #444444ee;
+  
+}
+
+.delete-dialog{
+  width: 50rem;
+  height: 50rem;
+  box-shadow: 0 0 8px black;
+  border: 0;
+  border-radius:0.6rem;
+  background-color: #333;
+  color: white;
+  padding: 0;
+
+  /*position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;*/
+}
+
+.dialog-headder{
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.dialog-content{
+  padding: 1rem;
+}
+.dialog-footer{
+  padding: 1rem;
+  margin-top: 1.7rem;
+  text-align: center;
+  background-color: #1a1a1a;
+  bottom: 0%;
+}
+.dialog-footer >button{
+  padding: 0.7rem 1rem 0.7rem 1rem;
+  width: 45%;
+  margin: 0.3rem;
+  border: 0;
+  border-radius:0.6rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.dialog-delete{
+  background-color: #4CC2FF;
+}
+.dialog-delete:hover{
+  background-color: #1588b6;
+}
+
+.dialog-cancel{
+  background-color: #333;
+  color: #fff;
+}
+.dialog-cancel:hover{
+  background-color: #444;
 }

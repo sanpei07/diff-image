@@ -1,7 +1,11 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useEffect, useState, useCallback  } from 'react';
+import React, { useEffect, useState, useCallback,useRef  } from 'react';
 import { useKey } from "rooks";
+import Modal from "react-modal";
 import { Button, Card ,Segment} from 'semantic-ui-react';
+import {AiFillFolderOpen} from 'react-icons/ai'
+import {BsArrowLeftCircle,BsArrowRightCircle,BsFolderSymlink} from 'react-icons/bs'
+import {RiDeleteBin6Line} from 'react-icons/ri'
 import './App.css';
 const { myAPI } = window;
 
@@ -20,6 +24,26 @@ const styles : {[key: string]:React.CSSProperties} = {
     //width:"80%",
     transition: "0.3s",
     transform:"scale(1.1,1.1)"
+  },
+}
+const modalStyle : {[key: string]:React.CSSProperties} = {
+  overlay: {
+    backgroundColor: "rgba(0,0,0,0.85)"
+  },
+  content:{
+    position:"absolute",
+    top: "50%",
+    left: "50%",
+    padding:0,
+    backgroundColor: "#333",
+    color: "#fff",
+    border: 0,
+    borderRadius:"0.6rem",
+    width:"30rem",
+    height:"15rem",
+    transform:"translateX(-50%) translateY(-50%) ",
+    boxShadow: "0 0 8px black",
+    overflow:"hidden"
   }
 }
 
@@ -29,10 +53,11 @@ const Home:React.FC = () => {
   const [imgNum,setImgNum] = useState(0);
   const [isOver1, setIsOver1] = useState(false);
   const [isOver2, setIsOver2] = useState(false);
+  const [isOpenDialog,setIsOpenDialog] = useState(false);
 
   useKey(['ArrowLeft'],()=>{imagePrevious()});
   useKey(['ArrowRight'],()=>{imageNext()});
-  useKey(['Delete'],()=>{imageDelete()});
+  useKey(['Delete'],()=>{showDeleteDialog()});
 
   const openImage1Dir = () =>{
     myAPI.openDir(APIMsg.IMAGES1);
@@ -55,9 +80,17 @@ const Home:React.FC = () => {
       (imgNum<images2.length-1)?setImgNum(imgNum+1):setImgNum(0);
     }
   }
+  const showDeleteDialog =()=>{
+    setIsOpenDialog(true);
+    //imageDelete
+  }
+
+  const closeDeleteDialog =()=>{
+    setIsOpenDialog(false);
+  }
 
   const imageDelete =()=>{
-    var result = window.confirm('削除してもよろしいでしょうか?');
+    var result = window.confirm('このファイルを削除してよろしいでしょうか?');
     if(result){
       myAPI.deleteImage(images1[imgNum],images2[imgNum]);
       images1.splice(imgNum,1);
@@ -98,17 +131,27 @@ const Home:React.FC = () => {
   }
 
   const editbar = () =>{
-    if(images1.length > 0 || images2.length > 0){
+    if(images1.length >= 0 || images2.length >= 0){
       return(
       <div className='flexdwrap'>
         <div id='editbar'>
-        <Segment inverted>
-            <Button className='editbutton' icon="arrow alternate circle left outline" onClick={()=>{imagePrevious()}}/>
-            <Button className='editbutton' icon="folder open outline" onClick={()=>{openImage1Dir()}}/>
-            <Button className='editbutton' icon="trash alternate outline" onClick={()=>{imageDelete();}}/>  
-            <Button className='editbutton' icon="folder open outline" onClick={()=>{openImage2Dir()}}/>
-            <Button className='editbutton' icon="arrow alternate circle right outline" onClick={()=>{imageNext()}}/>
-          </Segment>
+        
+            <button className='editbutton' onClick={()=>{imagePrevious()}}>
+              <BsArrowLeftCircle size={50}  color={"#fff"}/>
+            </button>
+            <button  className='editbutton' onClick={()=>{openImage1Dir()}}>
+              <AiFillFolderOpen size={50}  color={"#fff"}/>
+            </button>
+            <button className='editbutton' onClick={()=>{showDeleteDialog();}}>
+              <RiDeleteBin6Line size={50} color={"#fff"} />
+            </button>
+            <button  className='editbutton' onClick={()=>{openImage2Dir()}}>
+              <AiFillFolderOpen size={50}  color={"#fff"}/>
+            </button>
+            <button className='editbutton' onClick={()=>{imageNext()}}>
+              <BsArrowRightCircle size={50}  color={"#fff"}/>
+            </button>
+          
         </div>
       </div>);
     }else{
@@ -129,7 +172,7 @@ const Home:React.FC = () => {
   },[])
 
   return (
-
+    <>
     <div id='container'>
       
       <div id='body'>
@@ -150,7 +193,7 @@ const Home:React.FC = () => {
                 onDrop={(e)=>{dropFolder1(e)}}
                 onDragLeave={(e)=>{dropFolder1(e)}}
                 onClick={()=>{openImage1Dir()}}>
-                FOLDER1
+                <BsFolderSymlink size={100} color={"#ddd"}/>
               </div>)}
         </div>
         <div className='bodyImageWrap'>
@@ -170,7 +213,7 @@ const Home:React.FC = () => {
                 onDrop={(e)=>{dropFolder2(e)}}
                 onDragLeave={(e)=>{dropFolder2(e)}}
               onClick={()=>{openImage2Dir()}}>
-              FOLDER2
+              <BsFolderSymlink size={100} color={"#ddd"}/>
             </div>)}
         </div>
         {editbar()}
@@ -191,8 +234,21 @@ const Home:React.FC = () => {
             )))}
         </Card.Group>
       </div>
-
+      <Modal style={modalStyle} isOpen={isOpenDialog}  onRequestClose={() => setIsOpenDialog(false)}>
+        <div className='dialog-headder'>
+          <h3>このファイルを削除しますか?</h3>
+        </div>
+        <div className='dialog-content'>
+          このファイルを削除してもよろしてでしょうか?
+        </div>
+        <footer className='dialog-footer'>
+          <button className='dialog-delete'>削除</button>
+          <button className='dialog-cancel' onClick={()=>{closeDeleteDialog()}}>キャンセル</button>
+        </footer>
+    </Modal>
     </div>
+    
+    </>
   );
 };
 
