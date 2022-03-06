@@ -81,8 +81,7 @@ const Home:React.FC = () => {
     }
   }
   const showDeleteDialog =()=>{
-    setIsOpenDialog(true);
-    //imageDelete
+    if(images1.length >0 || images2.length > 0)setIsOpenDialog(true);
   }
 
   const closeDeleteDialog =()=>{
@@ -90,22 +89,32 @@ const Home:React.FC = () => {
   }
 
   const imageDelete =()=>{
-    var result = window.confirm('このファイルを削除してよろしいでしょうか?');
-    if(result){
       myAPI.deleteImage(images1[imgNum],images2[imgNum]);
       images1.splice(imgNum,1);
       images2.splice(imgNum,1);
       setImages1([...images1]);
       setImages2([...images2]);
-    }
+      if(imgNum >= images1.length && imgNum >= images2.length){
+        setImgNum(Math.max(images1.length-1 , images2.length-1));
+      }
+      closeDeleteDialog();
   }
 
   const dropFolder1 = (e:React.DragEvent) =>{
     setIsOver1(false);
+    
     if(e.type == 'drop'){
+      
       const fileList = e.dataTransfer.files;
-      const path = fileList.item(0)?.path;
+      let path = fileList.item(0)?.path;
+      const type = fileList.item(0)?.type;
+      
       if(path){
+        if(type=="image/jpeg" || type=="image/png"){
+          var s1 = path.split("\\").pop();
+          path = path.replace(s1!,"");
+          console.log(path)
+        }
         myAPI.dropFolder(path,APIMsg.IMAGES1);
       }
     }
@@ -119,8 +128,15 @@ const Home:React.FC = () => {
     setIsOver2(false);
     if(e.type == 'drop'){
       const fileList = e.dataTransfer.files
-      const path = fileList.item(0)?.path;
+      let path = fileList.item(0)?.path;
+      const type = fileList.item(0)?.type;
+
       if(path){
+        if(type=="image/jpeg" || type=="image/png"){
+          var s1 = path.split("\\").pop();
+          path = path.replace(s1!,"");
+          console.log(path)
+        }
         myAPI.dropFolder(path,APIMsg.IMAGES2);
       }
     }
@@ -164,7 +180,8 @@ const Home:React.FC = () => {
     const removeListener = myAPI.onReceiveImages((files: string[],msg:string) => {
       if(msg == APIMsg.IMAGES1) setImages1(files);
       if(msg == APIMsg.IMAGES2) setImages2(files);
-      console.log(msg);
+      setImgNum(0);
+      ////console.log(msg);
     });
     return ()=>{
       removeListener();
@@ -242,7 +259,7 @@ const Home:React.FC = () => {
           このファイルを削除してもよろしてでしょうか?
         </div>
         <footer className='dialog-footer'>
-          <button className='dialog-delete'>削除</button>
+          <button className='dialog-delete' onClick={()=>{imageDelete()}}>削除</button>
           <button className='dialog-cancel' onClick={()=>{closeDeleteDialog()}}>キャンセル</button>
         </footer>
     </Modal>
