@@ -187,8 +187,10 @@ const ReadImageData = (readPath:string,msg:string)=>{
 
 const DeleteImage = (path1:string,path2:string) => {
   try{
-    fs.unlinkSync(path1);
-    fs.unlinkSync(path2);
+    var ex1 =  fs.existsSync(path1);
+    if(ex1) fs.unlinkSync(path1);
+    var ex2 =  fs.existsSync(path2);
+    if(ex2) fs.unlinkSync(path2);
     console.log("delete")
   }catch (error){
     throw error;

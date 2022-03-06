@@ -30,8 +30,8 @@ body {
   width:100%;
 }
 .dropArea{
-  width:70%;
-  height:70%;
+  width:30vw;
+  height:30vw;
   border:1rem dashed #aaa;
   border-radius:1rem;
   font-size:3rem;
