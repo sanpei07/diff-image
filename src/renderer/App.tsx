@@ -25,6 +25,12 @@ const styles : {[key: string]:React.CSSProperties} = {
     transition: "0.3s",
     transform:"scale(1.1,1.1)"
   },
+  sideImageNormal:{
+  },
+  sideImageSelect:{
+    border:"3px solid #4CC2FF",
+  }
+
 }
 const modalStyle : {[key: string]:React.CSSProperties} = {
   overlay: {
@@ -240,13 +246,13 @@ const Home:React.FC = () => {
         <Card.Group itemsPerRow={2}>
           {(images1.length>images2.length)?(images1.map((image,index) => (
           <>
-          <Card raised image={image} onClick={()=>{setImgNum(index)}} />
-          <Card raised image={images2[index] } onClick={()=>{setImgNum(index)}} />
+          <Card style={(index == imgNum)?styles.sideImageSelect:styles.sideImageNormal} raised image={image} onClick={()=>{setImgNum(index)}} />
+            <Card style={(index == imgNum)?styles.sideImageSelect:styles.sideImageNormal} raised image={images2[index]} onClick={()=>{setImgNum(index)}} />
           </>
           ))):(images2.map((image,index) => (
             <>
-            <Card raised image={images1[index]} onClick={()=>{setImgNum(index)}} />
-            <Card raised image={image} onClick={()=>{setImgNum(index)}} />
+            <Card style={(index == imgNum)?styles.sideImageSelect:styles.sideImageNormal} raised image={images1[index]} onClick={()=>{setImgNum(index)}} />
+            <Card style={(index == imgNum)?styles.sideImageSelect:styles.sideImageNormal} raised image={image} onClick={()=>{setImgNum(index)}} />
             </>
             )))}
         </Card.Group>

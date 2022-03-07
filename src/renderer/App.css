@@ -135,3 +135,11 @@ body {
 .dialog-cancel:hover{
   background-color: #444;
 }
+
+#sidebar img{
+  object-fit: contain;
+  height: 80px;
+  /*width: 4vmax;
+  height: 4vmax;*/
+  /*object-fit: cover;*/
+}
