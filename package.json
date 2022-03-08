@@ -31,7 +31,7 @@
     ]
   },
   "build": {
-    "productName": "DiffImage",
+    "productName": "Diff Image",
     "appId": "com.lestav.DiffImage",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
