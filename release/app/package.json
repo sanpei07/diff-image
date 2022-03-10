@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/main/main.js",
-  "author": "",
+  "author": {
+    "name": "",
+    "email": ""
+  },
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",

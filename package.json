@@ -87,14 +87,16 @@
     },
     "extraResources": [
       "./assets/**"
-    ],
-    "publish": {
-      "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
-    }
+    ]
   },
-  "author": "",
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "author": {
+    "name": "",
+    "email": ""
+  },
   "license": "MIT",
   "keywords": [
     "electron",
