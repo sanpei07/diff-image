@@ -18,8 +18,8 @@ npm start
 npm run package
 ```
 `release/build/` 内にインストール用のexeファイルが作成される。
-<!-- ## インストーラー
-[ここから](https://les-tav.com/products/DiffImageSetup.exe)Windows用のインストーラーをダウンロード -->
+## インストーラー
+[ここから](https://les-tav.com/products/DiffImageSetup.exe)Windows用のインストーラーをダウンロード 
 
 ## アプリの操作方法
 ![](https://user-images.githubusercontent.com/15167410/157456915-2ca551cc-314e-49fe-9e23-c27498c62e4b.gif)

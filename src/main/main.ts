@@ -16,7 +16,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
 import mime from 'mime-types';
-
+//import trash from 'trash';
+//const trash = require("trash");
 
 const  { IPCKeys } = require("./constants");
 
@@ -186,12 +187,19 @@ const ReadImageData = (readPath:string,msg:string)=>{
   })
 }
 
-const DeleteImage = (path1:string,path2:string) => {
+const DeleteImage = async(path1:string,path2:string) => {
   try{
     var ex1 =  fs.existsSync(path1);
-    if(ex1) fs.unlinkSync(path1);
+    if(ex1) {
+      fs.unlinkSync(path1);
+      /*await trash([path1]).then(()=>{
+        console.log("delete1")
+      });*/
+    }
     var ex2 =  fs.existsSync(path2);
-    if(ex2) fs.unlinkSync(path2);
+    if(ex2){ 
+      fs.unlinkSync(path2);
+    }
     console.log("delete")
   }catch (error){
     throw error;
